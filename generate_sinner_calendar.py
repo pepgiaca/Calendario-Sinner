@@ -35,7 +35,7 @@ def dtstamp(ts: int) -> str:
 
 def get_events(kind: str):
     # kind: next or last
-    url = f"https://api.sofascore.com/api/v1/player/{PLAYER_ID}/events/{kind}/0"
+    url = f"https://api.sofascore.com/api/v1/player/{PLAYER_ID}/events/{kind}"
     r = requests.get(url, headers=HEADERS, timeout=30)
     r.raise_for_status()
     return r.json().get("events", [])
