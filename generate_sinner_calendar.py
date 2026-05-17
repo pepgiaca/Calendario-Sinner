@@ -34,11 +34,11 @@ def dtstamp(ts: int) -> str:
     return datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 def get_events(kind: str):
-    url = f"https://api.sofascore.com/api/v1/player/{PLAYER_ID}/events/{kind}"
+    url = f"https://www.sofascore.com/api/v1/player/{PLAYER_ID}/events/{kind}"
+
     r = requests.get(url, headers=HEADERS, timeout=30)
 
     print("STATUS:", r.status_code)
-    print(r.text[:500])
 
     r.raise_for_status()
 
