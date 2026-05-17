@@ -34,18 +34,30 @@ def dtstamp(ts: int) -> str:
     return datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 def get_events(kind: str):
-    url = f"https://www.sofascore.com/api/v1/player/{PLAYER_ID}/events/{kind}"
+    urls = [
+        f"https://www.sofascore.com/api/v1/player/{PLAYER_ID}/events/{kind}/0",
+        f"https://api.sofascore.com/api/v1/player/{PLAYER_ID}/events/{kind}/0",
+        f"https://www.sofascore.com/api/v1/player/{PLAYER_ID}/events/{kind}",
+        f"https://api.sofascore.com/api/v1/player/{PLAYER_ID}/events/{kind}",
+    ]
 
-    r = requests.get(url, headers=HEADERS, timeout=30)
+    for url in urls:
+        try:
+            print("Provo:", url)
+            r = requests.get(url, headers=HEADERS, timeout=30)
+            print("Status:", r.status_code)
+            r.raise_for_status()
 
-    print("STATUS:", r.status_code)
+            data = r.json()
+            events = data.get("events", [])
 
-    r.raise_for_status()
+            print(f"Trovati {len(events)} eventi da {url}")
 
-    data = r.json()
+            if events:
+                return events
 
-    if isinstance(data, dict):
-        return data.get("events", [])
+        except Exception as e:
+            print("Errore su endpoint:", url, e)
 
     return []
 
